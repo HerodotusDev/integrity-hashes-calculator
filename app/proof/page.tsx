@@ -7,7 +7,7 @@ import Plain from "../_components/plain";
 
 export default function ProgramHashPage() {
     const [jsonData, setJsonData] = useState<any>(null);
-    const [program_hash, output, output_hash, is_bootloaded] = useMemo(() => {
+    const [program_hash, output, is_bootloaded] = useMemo(() => {
         if (!jsonData) {
             return [null, null, null, null];
         }
@@ -17,15 +17,15 @@ export default function ProgramHashPage() {
             jsonData["public_input"]["memory_segments"]["execution"][
                 "begin_addr"
             ] - 2;
-        const program = page.filter((x) => x["address"] < program_end);
+        const program = page.filter((x: any) => x["address"] < program_end);
         let program_hash;
         try {
             program_hash =
                 "0x" +
                 poseidonHashMany(
-                    program.map((x) => BigInt(x["value"])),
+                    program.map((x: any) => BigInt(x["value"])),
                 ).toString(16);
-        } catch (e) {
+        } catch (e: any) {
             program_hash = null;
         }
 
@@ -35,24 +35,16 @@ export default function ProgramHashPage() {
             jsonData["public_input"]["memory_segments"]["output"]["stop_ptr"];
         const output = page
             .filter(
-                (x) =>
+                (x: any) =>
                     x["address"] >= output_start && x["address"] < output_end,
             )
-            .map((x) => x["value"]);
-        let output_hash;
-        try {
-            output_hash =
-                "0x" +
-                poseidonHashMany(output.map((x) => BigInt(x))).toString(16);
-        } catch (e) {
-            output_hash = null;
-        }
+            .map((x: any) => x["value"]);
 
         const is_bootloaded =
             output[0] == "0x1" &&
             output[1] == "0x" + (output.length - 1).toString(16);
 
-        return [program_hash, output, output_hash, is_bootloaded];
+        return [program_hash, output, is_bootloaded];
     }, [jsonData]);
 
     const handleFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
