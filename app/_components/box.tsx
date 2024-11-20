@@ -1,5 +1,6 @@
 import { cn } from "cn-func";
 import { shorten } from "./hash";
+import { showToast } from "@/app/_utils/toast";
 
 type Props = {
     values: string[];
@@ -65,7 +66,10 @@ export default function Box({
                         // <input className="bg-transparent text-white/70 min-w-4 w-auto" value={value} readOnly />
                         <button
                             className="p-2 opacity-70"
-                            onClick={() => navigator.clipboard.writeText(value)}
+                            onClick={(e) => {
+                                navigator.clipboard.writeText(value);
+                                showToast("Copied!", e.clientX, e.clientY);
+                            }}
                         >
                             {shorten(value)}
                         </button>
