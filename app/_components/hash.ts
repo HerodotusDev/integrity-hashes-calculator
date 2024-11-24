@@ -5,17 +5,21 @@ const hash = (input: string[]) => {
         return (
             "0x" + poseidonHashMany(input.map((x) => BigInt(x))).toString(16)
         );
-    } catch (e) {
+    } catch {
         return "-";
     }
 };
 
 function shorten(input: string) {
-    if (input.length < 10) {
+    if (input.length <= 19) {
         return input;
     }
     return input.slice(0, 8) + "..." + input.slice(-8);
 }
 
-export { shorten };
+function stringToHex(input: string) {
+    return "0x" + Buffer.from(input).toString("hex");
+}
+
+export { shorten, stringToHex };
 export default hash;

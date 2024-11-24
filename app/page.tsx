@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Bootloaded from "./_components/bootloaded";
+import ProgramViewer from "./_components/program-viewer";
 import Link from "next/link";
 
 export default function Home() {
@@ -15,14 +15,14 @@ export default function Home() {
     // fact hash: 0x7e5c70a21c04ac05f296a3ff378eb31789f0665150980fef53cb3d09dd5b4fd
 
     return (
-        <>
-            <p>
+        <div>
+            <p className="mb-2">
                 You can also{" "}
                 <Link href="/proof" className="text-blue-600">
                     read data from uploaded proof
                 </Link>
             </p>
-            <Bootloaded
+            <ProgramViewer
                 programHash={programHash}
                 output={output}
                 bootloaderHash={bootloaderHash}
@@ -30,6 +30,6 @@ export default function Home() {
                 updateOutput={setOutput}
                 updateBootloaderHash={setBootloaderHash}
             />
-        </>
+        </div>
     );
 }

@@ -5,23 +5,23 @@ import Arrow from "./arrow";
 import Box from "./box";
 import hash from "./hash";
 
-interface Props {
+interface BootloaderInput {
     programHash: string;
     output: string[];
     bootloaderHash: string;
-    updateProgramHash?: (s: string) => void;
-    updateOutput?: (s: string[]) => void;
-    updateBootloaderHash?: (s: string) => void;
 }
 
-export default function Bootloaded({
+interface BootloaderOutput {
+    bootloaderOutput: string[];
+    bootloaderOutputHash: string;
+    factHash: string;
+}
+
+export function useBootloader({
     programHash,
     output,
     bootloaderHash,
-    updateProgramHash,
-    updateOutput,
-    updateBootloaderHash,
-}: Props) {
+}: BootloaderInput): BootloaderOutput {
     const bootloaderNoJobs = 1;
     const bootloaderOutput = useMemo(
         () => [
@@ -41,8 +41,28 @@ export default function Bootloaded({
         [bootloaderHash, bootloaderOutputHash],
     );
 
+    return { bootloaderOutput, bootloaderOutputHash, factHash };
+}
+
+type BootloaderInputUpdate = {
+    [K in keyof BootloaderInput as `${K & string}_update`]?:
+        | React.Dispatch<React.SetStateAction<BootloaderInput[K]>>
+        | undefined;
+};
+
+export default function Bootloaded({
+    programHash,
+    output,
+    bootloaderHash,
+    bootloaderOutput,
+    bootloaderOutputHash,
+    factHash,
+    programHash_update,
+    output_update,
+    bootloaderHash_update,
+}: BootloaderInput & BootloaderInputUpdate & BootloaderOutput) {
     return (
-        <div className="flex min-w-min items-center justify-center px-4 pt-8">
+        <div className="flex min-w-min items-center justify-center px-4">
             <Box
                 root
                 values={bootloaderOutput}
@@ -52,8 +72,8 @@ export default function Bootloaded({
                         values={[programHash]}
                         topText="program hash"
                         onUpdate={
-                            updateProgramHash
-                                ? (_, s) => updateProgramHash(s)
+                            programHash_update
+                                ? (_, s) => programHash_update(s)
                                 : undefined
                         }
                         below={[
@@ -71,9 +91,9 @@ export default function Bootloaded({
                         values={output}
                         topText="output"
                         onUpdate={
-                            updateOutput
+                            output_update
                                 ? (i, s) =>
-                                      updateOutput(output.toSpliced(i, 1, s))
+                                      output_update(output.toSpliced(i, 1, s))
                                 : undefined
                         }
                         colStart={4}
@@ -93,8 +113,8 @@ export default function Bootloaded({
                         values={[bootloaderHash]}
                         topText="bootloader program hash"
                         onUpdate={
-                            updateBootloaderHash
-                                ? (_, s) => updateBootloaderHash(s)
+                            bootloaderHash_update
+                                ? (_, s) => bootloaderHash_update(s)
                                 : undefined
                         }
                         colStart={1}
@@ -120,17 +140,17 @@ export default function Bootloaded({
                     />,
                 ]}
             />
-            {updateOutput && (
+            {output_update && (
                 <>
                     <button
                         className="mb-auto ml-1 mt-1 size-8 shrink-0 rounded-lg border border-white transition-all hover:bg-white hover:text-black"
-                        onClick={() => updateOutput([...output, "0x0"])}
+                        onClick={() => output_update([...output, "0x0"])}
                     >
                         +
                     </button>
                     <button
                         className="mb-auto ml-1 mt-1 size-8 shrink-0 rounded-lg border border-white transition-all hover:bg-white hover:text-black"
-                        onClick={() => updateOutput(output.slice(0, -1))}
+                        onClick={() => output_update(output.slice(0, -1))}
                     >
                         -
                     </button>

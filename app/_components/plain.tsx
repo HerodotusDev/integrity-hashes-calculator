@@ -8,35 +8,60 @@ import hash from "./hash";
 interface Props {
     programHash: string;
     output: string[];
+    outputHash: string;
+    factHash: string;
     updateProgramHash?: (s: string) => void;
     updateOutput?: (s: string[]) => void;
 }
 
-export default function Plain({
+export function usePlain({
     programHash,
     output,
-    updateProgramHash,
-    updateOutput,
-}: Props) {
+}: {
+    programHash: string;
+    output: string[];
+}) {
     const outputHash = useMemo(() => hash(output), [output]);
     const factHash = useMemo(
         () => hash([programHash, outputHash]),
         [programHash, outputHash],
     );
+    return { outputHash, factHash };
+}
 
+export default function Plain({
+    programHash,
+    output,
+    outputHash,
+    factHash,
+    updateProgramHash,
+    updateOutput,
+}: Props) {
     return (
         <div className="flex min-w-min items-center justify-center px-4 pt-8">
             <Box
                 root={output.length + 2}
-                values={output}
+                values={[]}
                 colStart={3}
                 colShift={3}
                 below={[
+                    <Box
+                        values={output}
+                        topText="output"
+                        colStart={3}
+                        onUpdate={
+                            updateOutput
+                                ? (i, s) =>
+                                      updateOutput(output.toSpliced(i, 1, s))
+                                : undefined
+                        }
+                        key="1"
+                    />,
                     <Arrow
                         cols={output.map(() => true)}
                         bottom={1}
                         colStart={3}
-                        key="1"
+                        key="2"
                     />,
                     <Box
                         values={[programHash]}
@@ -46,25 +71,25 @@ export default function Plain({
                                 ? (_, s) => updateProgramHash(s)
                                 : undefined
                         }
-                        key="2"
+                        key="3"
                     />,
                     <Box
                         values={[outputHash]}
                         topText="output hash"
                         colStart={3}
-                        key="3"
+                        key="4"
                     />,
                     <Arrow
                         cols={[true, false, true]}
                         colStart={1}
                         bottom={2}
-                        key="4"
+                        key="5"
                     />,
                     <Box
                         values={[factHash]}
                         topText="fact hash"
                         colStart={2}
-                        key="5"
+                        key="6"
                     />,
                 ]}
             />
