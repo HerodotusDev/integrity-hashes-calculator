@@ -22,7 +22,7 @@ export default function ProgramHashPage() {
             const program = page.filter((x: any) => x["address"] < program_end);
             let program_hash;
             try {
-                program_hash = hash(program.map((x) => x["value"]));
+                program_hash = hash(program.map((x: any) => x["value"]));
             } catch (e: any) {
                 program_hash = null;
             }
