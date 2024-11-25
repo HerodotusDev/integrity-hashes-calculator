@@ -106,9 +106,15 @@ export default function ProgramHashPage() {
         <div>
             {is_bootloaded === true && (
                 <>
-                    <h2 className="absolute">
-                        Your proof looks like bootloaded
-                    </h2>
+                    <div className="absolute">
+                        <h2>Your proof looks like bootloaded</h2>
+                        <button
+                            className="text-blue-600"
+                            onClick={() => setJsonData(null)}
+                        >
+                            Submit another
+                        </button>
+                    </div>
                     <Bootloaded
                         bootloaderHash={program_hash}
                         programHash={programHash}
@@ -121,7 +127,15 @@ export default function ProgramHashPage() {
             )}
             {is_bootloaded === false && (
                 <>
-                    <h2 className="absolute">Your proof is not bootloaded</h2>
+                    <div className="absolute">
+                        <h2>Your proof is not bootloaded</h2>
+                        <button
+                            className="text-blue-600"
+                            onClick={() => setJsonData(null)}
+                        >
+                            Submit another
+                        </button>
+                    </div>
                     <Plain
                         programHash={program_hash}
                         output={output}
