@@ -8,11 +8,11 @@ import hash from "../_components/hash";
 
 export default function ProgramHashPage() {
     const [jsonData, setJsonData] = useState<any>(null);
-    const [program_hash, output, is_bootloaded, layout, hasher] =
-        useMemo(() => {
-            if (!jsonData) {
-                return [null, null, null, "", ""];
-            }
+    const parsed = useMemo(() => {
+        if (!jsonData) {
+            return null;
+        }
+        try {
             const page = jsonData["public_input"]["public_memory"];
 
             const program_end =
@@ -53,14 +53,17 @@ export default function ProgramHashPage() {
                 .replace("blake256", "blake")
                 .replace("masked", "");
 
-            return [
+            return {
                 program_hash,
                 output,
                 is_bootloaded,
                 layout,
                 hasher,
-            ] as const;
-        }, [jsonData]);
+            };
+        } catch {
+            return null;
+        }
+    }, [jsonData]);
 
     const handleFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
         const file = e.target?.files?.[0];
@@ -82,79 +85,78 @@ export default function ProgramHashPage() {
         }
     };
 
-    const programHash = output?.[2];
-    const childOutput = output?.slice(3);
+    const programHash = parsed?.output?.[2];
+    const childOutput = parsed?.output?.slice(3);
     const {
         bootloaderOutput,
         bootloaderOutputHash,
         factHash: bootloadedFactHash,
     } = useBootloader({
-        bootloaderHash: program_hash ?? "",
+        bootloaderHash: parsed?.program_hash ?? "",
         programHash: programHash ?? "",
         output: childOutput ?? [],
     });
 
     const { outputHash, factHash: plainFactHash } = usePlain({
-        programHash: program_hash ?? "",
-        output,
+        programHash: parsed?.program_hash ?? "",
+        output: parsed?.output,
     });
 
-    if (program_hash === null)
+    if (jsonData === null)
         return <input type="file" accept=".json" onChange={handleFileChange} />;
 
     return (
         <div>
-            {is_bootloaded === true && (
+            {jsonData !== null &&
+                (parsed !== null ? (
+                    <h2>
+                        Your proof{" "}
+                        {parsed.is_bootloaded ? "looks like" : "is not"}{" "}
+                        bootloaded
+                    </h2>
+                ) : (
+                    <h2>File cannot be parsed as a proof</h2>
+                ))}
+            <button className="text-blue-600" onClick={() => setJsonData(null)}>
+                Submit another
+            </button>
+            {parsed?.is_bootloaded === true && (
+                <Bootloaded
+                    bootloaderHash={parsed.program_hash}
+                    programHash={programHash}
+                    output={childOutput}
+                    bootloaderOutput={bootloaderOutput}
+                    bootloaderOutputHash={bootloaderOutputHash}
+                    factHash={bootloadedFactHash}
+                />
+            )}
+            {parsed?.is_bootloaded === false && (
+                <Plain
+                    programHash={parsed.program_hash}
+                    output={parsed.output}
+                    outputHash={outputHash}
+                    factHash={plainFactHash}
+                />
+            )}
+
+            {parsed !== null && (
                 <>
-                    <div className="absolute">
-                        <h2>Your proof looks like bootloaded</h2>
-                        <button
-                            className="text-blue-600"
-                            onClick={() => setJsonData(null)}
-                        >
-                            Submit another
-                        </button>
-                    </div>
-                    <Bootloaded
-                        bootloaderHash={program_hash}
-                        programHash={programHash}
-                        output={childOutput}
-                        bootloaderOutput={bootloaderOutput}
-                        bootloaderOutputHash={bootloaderOutputHash}
-                        factHash={bootloadedFactHash}
+                    <div className="h-12" />
+
+                    <VerificationHash
+                        layout={parsed.layout}
+                        hasher={parsed.hasher}
+                        stoneVersion="stone5"
+                        memoryVerification="strict"
+                        securityBits="96"
+                        factHash={
+                            parsed.is_bootloaded
+                                ? bootloadedFactHash
+                                : plainFactHash
+                        }
                     />
                 </>
             )}
-            {is_bootloaded === false && (
-                <>
-                    <div className="absolute">
-                        <h2>Your proof is not bootloaded</h2>
-                        <button
-                            className="text-blue-600"
-                            onClick={() => setJsonData(null)}
-                        >
-                            Submit another
-                        </button>
-                    </div>
-                    <Plain
-                        programHash={program_hash}
-                        output={output}
-                        outputHash={outputHash}
-                        factHash={plainFactHash}
-                    />
-                </>
-            )}
-
-            <div className="h-12" />
-
-            <VerificationHash
-                layout={layout}
-                hasher={hasher}
-                stoneVersion="stone5"
-                memoryVerification="strict"
-                securityBits="96"
-                factHash={is_bootloaded ? bootloadedFactHash : plainFactHash}
-            />
         </div>
     );
 }
