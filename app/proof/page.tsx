@@ -20,12 +20,7 @@ export default function ProgramHashPage() {
                     "begin_addr"
                 ] - 2;
             const program = page.filter((x: any) => x["address"] < program_end);
-            let program_hash;
-            try {
-                program_hash = hash(program.map((x: any) => x["value"]));
-            } catch (e: any) {
-                program_hash = null;
-            }
+            const program_hash = hash(program.map((x: any) => x["value"]));
 
             const output_start =
                 jsonData["public_input"]["memory_segments"]["output"][
@@ -75,7 +70,7 @@ export default function ProgramHashPage() {
                         event.target?.result as string,
                     );
                     setJsonData(parsedData);
-                } catch (e) {
+                } catch {
                     setJsonData(null);
                 }
             };
