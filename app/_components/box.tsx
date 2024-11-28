@@ -13,6 +13,7 @@ type Props = {
     root?: boolean | number;
     colStart?: number;
     colShift?: number;
+    inputSelect?: Record<number, [string, string][]>;
 };
 
 export default function Box({
@@ -26,6 +27,7 @@ export default function Box({
     topText,
     colStart,
     colShift = 1,
+    inputSelect,
 }: Props) {
     return (
         <div
@@ -57,11 +59,29 @@ export default function Box({
                     )}
                 >
                     {onUpdate ? (
-                        <input
-                            className="w-full bg-transparent p-2 text-center text-white"
-                            value={value}
-                            onChange={(e) => onUpdate(index, e.target.value)}
-                        />
+                        inputSelect?.[index] ? (
+                            <select
+                                className="w-full bg-transparent p-2 text-center text-white"
+                                value={value}
+                                onChange={(e) =>
+                                    onUpdate(index, e.target.value)
+                                }
+                            >
+                                {inputSelect[index].map(([value, text]) => (
+                                    <option key={value} value={value}>
+                                        {text}
+                                    </option>
+                                ))}
+                            </select>
+                        ) : (
+                            <input
+                                className="w-full bg-transparent p-2 text-center text-white"
+                                value={value}
+                                onChange={(e) =>
+                                    onUpdate(index, e.target.value)
+                                }
+                            />
+                        )
                     ) : (
                         // <input className="bg-transparent text-white/70 min-w-4 w-auto" value={value} readOnly />
                         <button

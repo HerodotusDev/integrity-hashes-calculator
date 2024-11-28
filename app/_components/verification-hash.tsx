@@ -59,6 +59,23 @@ export default function VerificationHash({
                         onUpdate={
                             updateLayout ? (_, s) => updateLayout(s) : undefined
                         }
+                        inputSelect={{
+                            0: [
+                                ["", "-"],
+                                ["recursive", "recursive"],
+                                [
+                                    "recursive_with_poseidon",
+                                    "recursive_with_poseidon",
+                                ],
+                                ["small", "small"],
+                                ["dex", "dex"],
+                                ["starknet", "starknet"],
+                                [
+                                    "starknet_with_starknet",
+                                    "starknet_with_starknet",
+                                ],
+                            ],
+                        }}
                         topText="layout"
                         colStart={1}
                         className="mx-1"
@@ -69,6 +86,15 @@ export default function VerificationHash({
                         onUpdate={
                             updateHasher ? (_, s) => updateHasher(s) : undefined
                         }
+                        inputSelect={{
+                            0: [
+                                ["", "-"],
+                                ["keccak_160_lsb", "keccak_160_lsb"],
+                                ["keccak_248_lsb", "keccak_248_lsb"],
+                                ["blake2s_160_lsb", "blake2s_160_lsb"],
+                                ["blake2s_248_lsb", "blake2s_248_lsb"],
+                            ],
+                        }}
                         topText="hasher"
                         colStart={2}
                         className="mx-1"
@@ -81,6 +107,13 @@ export default function VerificationHash({
                                 ? (_, s) => updateStoneVersion(s)
                                 : undefined
                         }
+                        inputSelect={{
+                            0: [
+                                ["", "-"],
+                                ["stone5", "stone5"],
+                                ["stone6", "stone6 (also Sharp)"],
+                            ],
+                        }}
                         topText="stone version"
                         colStart={3}
                         className="mx-1"
@@ -93,6 +126,14 @@ export default function VerificationHash({
                                 ? (_, s) => updateMemoryVerification(s)
                                 : undefined
                         }
+                        inputSelect={{
+                            0: [
+                                ["", "-"],
+                                ["strict", "strict - cairo0 Stone proof"],
+                                ["relaxed", "relaxed - cairo0 Sharp proof"],
+                                ["cairo1", "cairo1"],
+                            ],
+                        }}
                         topText="memory verification"
                         colStart={4}
                         className="mx-1"
