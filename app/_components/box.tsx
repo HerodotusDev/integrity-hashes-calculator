@@ -61,7 +61,7 @@ export default function Box({
                     {onUpdate ? (
                         inputSelect?.[index] ? (
                             <select
-                                className="w-full bg-transparent p-2 text-center text-white"
+                                className="w-full min-w-12 bg-transparent p-2 text-center text-white"
                                 value={value}
                                 onChange={(e) =>
                                     onUpdate(index, e.target.value)
@@ -75,7 +75,7 @@ export default function Box({
                             </select>
                         ) : (
                             <input
-                                className="w-full bg-transparent p-2 text-center text-white"
+                                className="w-full min-w-12 bg-transparent p-2 text-center text-white"
                                 value={value}
                                 onChange={(e) =>
                                     onUpdate(index, e.target.value)
