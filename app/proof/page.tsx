@@ -48,7 +48,7 @@ export default function ProgramHashPage() {
             const layout = jsonData["public_input"]["layout"];
             const hasher = jsonData["proof_parameters"]["commitment_hash"]
                 .replace("keccak256", "keccak")
-                .replace("blake256", "blake")
+                .replace("blake256", "blake2s")
                 .replace("masked", "");
 
             const log_n_cosets =
