@@ -7,6 +7,9 @@ import VerificationHash from "../_components/verification-hash";
 import hash from "../_components/hash";
 
 export default function ProgramHashPage() {
+    const [stoneVersion, setStoneVersion] = useState("");
+    const [memoryVerification, setMemoryVerification] = useState("");
+
     const [jsonData, setJsonData] = useState<any>(null);
     const parsed = useMemo(() => {
         if (!jsonData) {
@@ -48,12 +51,27 @@ export default function ProgramHashPage() {
                 .replace("blake256", "blake")
                 .replace("masked", "");
 
+            const log_n_cosets =
+                jsonData["proof_parameters"]["stark"]["log_n_cosets"];
+            const n_queries =
+                jsonData["proof_parameters"]["stark"]["fri"]["n_queries"];
+            const proof_of_work_bits =
+                jsonData["proof_parameters"]["stark"]["fri"][
+                    "proof_of_work_bits"
+                ];
+
+            const security_bits = (
+                log_n_cosets * n_queries +
+                proof_of_work_bits
+            ).toString();
+
             return {
                 program_hash,
                 output,
                 is_bootloaded,
                 layout,
                 hasher,
+                security_bits,
             };
         } catch {
             return null;
@@ -141,14 +159,16 @@ export default function ProgramHashPage() {
                     <VerificationHash
                         layout={parsed.layout}
                         hasher={parsed.hasher}
-                        stoneVersion="stone5"
-                        memoryVerification="strict"
-                        securityBits="96"
+                        stoneVersion={stoneVersion}
+                        memoryVerification={memoryVerification}
+                        securityBits={parsed.security_bits}
                         factHash={
                             parsed.is_bootloaded
                                 ? bootloadedFactHash
                                 : plainFactHash
                         }
+                        updateStoneVersion={setStoneVersion}
+                        updateMemoryVerification={setMemoryVerification}
                     />
                 </>
             )}
