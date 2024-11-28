@@ -5,6 +5,7 @@ import Bootloaded, { useBootloader } from "../_components/bootloaded";
 import Plain, { usePlain } from "../_components/plain";
 import VerificationHash from "../_components/verification-hash";
 import hash from "../_components/hash";
+import Link from "next/link";
 
 export default function ProgramHashPage() {
     const [stoneVersion, setStoneVersion] = useState("");
@@ -116,10 +117,24 @@ export default function ProgramHashPage() {
     });
 
     if (jsonData === null)
-        return <input type="file" accept=".json" onChange={handleFileChange} />;
+        return (
+            <div className="flex flex-col gap-2">
+                <input type="file" accept=".json" onChange={handleFileChange} />
+                <Link href="/" className="text-blue-600">
+                    Go to interactive view
+                </Link>
+            </div>
+        );
 
     return (
         <div>
+            <button className="text-blue-600" onClick={() => setJsonData(null)}>
+                Submit another
+            </button>{" "}
+            |{" "}
+            <Link href="/" className="text-blue-600">
+                Go to interactive view
+            </Link>
             {jsonData !== null &&
                 (parsed !== null ? (
                     <h2>
@@ -130,9 +145,6 @@ export default function ProgramHashPage() {
                 ) : (
                     <h2>File cannot be parsed as a proof</h2>
                 ))}
-            <button className="text-blue-600" onClick={() => setJsonData(null)}>
-                Submit another
-            </button>
             {parsed?.is_bootloaded === true && (
                 <Bootloaded
                     bootloaderHash={parsed.program_hash}
@@ -151,7 +163,6 @@ export default function ProgramHashPage() {
                     factHash={plainFactHash}
                 />
             )}
-
             {parsed !== null && (
                 <>
                     <div className="h-12" />
