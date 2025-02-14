@@ -25,8 +25,8 @@ export default function ProgramViewer({
     const [isBootloaded, setIsBootloaded] = useState(true);
     const [layout, setLayout] = useState("recursive");
     const [hasher, setHasher] = useState("keccak_160_lsb");
-    const [stoneVersion, setStoneVersion] = useState("stone5");
-    const [memoryVerification, setMemoryVerification] = useState("strict");
+    const [stoneVersion, setStoneVersion] = useState("stone6");
+    const [memoryVerification, setMemoryVerification] = useState("relaxed");
     const [securityBits, setSecurityBits] = useState("96");
 
     const {

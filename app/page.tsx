@@ -5,14 +5,13 @@ import ProgramViewer from "./_components/program-viewer";
 import Link from "next/link";
 
 export default function Home() {
-    const [output, setOutput] = useState(["0x5", "0xd"]);
+    const [output, setOutput] = useState(["0xa", "0x90"]);
     const [programHash, setProgramHash] = useState(
-        "0x59874649ccc5a0a15ee77538f1eb760acb88cab027a2d48f4246bf17b7b7694",
+        "0x44024d4ce3b8553aef0387ab1c77befaada999a40814f677e289f086d54ccbb",
     );
     const [bootloaderHash, setBootloaderHash] = useState(
-        "0x40519557c48b25e7e7d27cb27297300b94909028c327b385990f0b649920cc3",
+        "0x5ab580b04e3532b6b18f81cfa654a05e29dd8e2352d88df1e765a84072db07",
     );
-    // fact hash: 0x7e5c70a21c04ac05f296a3ff378eb31789f0665150980fef53cb3d09dd5b4fd
 
     return (
         <div>
