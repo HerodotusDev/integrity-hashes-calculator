@@ -62,7 +62,7 @@ export default function Bootloaded({
     bootloaderHash_update,
 }: BootloaderInput & BootloaderInputUpdate & BootloaderOutput) {
     return (
-        <div className="flex min-w-min items-center justify-center px-4">
+        <div className="mt-8 flex min-w-min items-center justify-center px-4">
             <Box
                 root
                 values={bootloaderOutput}
